@@ -90,6 +90,10 @@ module DSA
       self[@length-1]
     end
 
+    def empty?
+      @length == 0
+    end
+
     # insert an element at position index(0 based), linear time cost, use with caution, iterator preferred
     def insert_at(index, e)
       push e if index > @length - 1

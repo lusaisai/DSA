@@ -1,9 +1,39 @@
+require_relative 'list'
+
 module DSA
   # The stack data structure
   # Delegate the job to ruby Array, no need to worry about its growing and shrinking.
   class ArrayStack
     def initialize
       @data = Array.new
+    end
+
+    def push(e)
+      @data.push e
+    end
+
+    def pop
+      @data.pop
+    end
+
+    def top
+      @data.last
+    end
+
+    def empty?
+      @data.empty?
+    end
+
+    def length
+      @data.length
+    end
+
+  end
+
+  # Stack built on top of list
+  class ListStack
+    def initialize
+      @data = DSA::List.new
     end
 
     def push(e)
@@ -89,6 +119,33 @@ module DSA
       @front_index = 0
     end
 
+  end
+
+  # FIFO queue built on top of linked list
+  class ListQueue
+    def initialize
+      @data = DSA::List.new
+    end
+
+    def enqueue(e)
+      @data.push e
+    end
+
+    def dequeue
+      @data.shift
+    end
+
+    def first
+      @data.first
+    end
+
+    def empty?
+      @data.empty?
+    end
+
+    def length
+      @data.length
+    end
   end
 
 end
