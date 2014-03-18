@@ -1,4 +1,5 @@
 require 'test/unit'
+require 'benchmark'
 require 'DSA'
 
 class MyTest < Test::Unit::TestCase
@@ -59,5 +60,25 @@ class MyTest < Test::Unit::TestCase
     assert_equal 30, li.remove, 'remove failed'
     l.print_me
 
+  end
+
+  def test_performance
+    value = 10**6
+    a = Array.new
+    b = DSA::List.new
+    puts 'test construction'
+    Benchmark.bm(20) do |x|
+      x.report('Array') { value.times{ |i| a.push i } }
+      x.report('List') { value.times{ |i| b.push i } }
+    end
+
+    puts 'test insertion'
+
+    value = 10**3
+    li = b.begin_iterator
+    Benchmark.bm(20) do |x|
+      x.report('Array') { value.times{ |i| a.insert(value, i) } }
+      x.report('List') { value.times{ li.next }; value.times{ |i| li.insert(i) }; }
+    end
   end
 end
