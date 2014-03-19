@@ -24,5 +24,22 @@ module DSA
       end
     end
 
+    # Insertion sort, n square worst running time, should not be used in general, built-in array sort is very good
+    def self.insertion_sort!(data)
+      data.length.times do |index|
+        this_value = data[index]
+        j = index - 1
+        while j >= -1
+          if data[j] > this_value && j != -1
+            data[j+1] = data[j]
+          else
+            data[j+1] = this_value
+            break
+          end
+          j -= 1
+        end
+      end
+    end
+
   end
 end
