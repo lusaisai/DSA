@@ -156,16 +156,16 @@ module DSA
     end
 
 
-    def each(&block)
+    def each
       return if @root.nil?
-      if block.nil?
+      if block_given?
+        in_order_traversal @root, Proc.new
+      else
         Enumerator.new do |y|
           each do |key, value|
             y << [key, value]
           end
         end
-      else
-        in_order_traversal @root, block
       end
     end
 
