@@ -54,7 +54,8 @@ To do lots of insertions/deletions, use the iterator, StopIteration is raised wh
     li = l.end_iterator # the iterator starts from the tail
     li.previous
 
-Enumerable is included, all those method such as 'each' are all available.
+Enumerable is included, all those method such as 'each' are all available, since other methods are based on each,
+the performance might not be the best, use only when a full traversal is inevitable.
 
 ### BinarySearchTree
 An ordered map, works like a hash, but preserves an order and provides range search, implemented as a RedBlack tree.
@@ -83,7 +84,8 @@ A help method tried to print a tree, not quite pretty, but may helps test
 
     rb.bfs_print
 
-Enumerable is included, all those method such as 'each' are all available.
+Enumerable is included, all those method such as 'each' are all available, since other methods are based on each,
+the performance might not be the best, use only when a full traversal is inevitable.
 
 
 ### PriorityQueue
