@@ -392,10 +392,12 @@ module DSA
     def insert(node, new_node)
       if node.key == new_node.key
         node.value = new_node.value
+        return node
       elsif new_node.key < node.key
         if node.left.nil?
           node.left = new_node
           new_node.parent = node
+          return new_node
         else
           insert( node.left, new_node )
         end
@@ -403,10 +405,199 @@ module DSA
         if node.right.nil?
           node.right = new_node
           new_node.parent = node
+          return new_node
         else
           insert( node.right, new_node )
         end
       end
+    end
+
+  end
+
+  class RedBlackTreeNode < BasicBinarySearchTreeNode
+    RED = 0
+    BLACK = 1
+    def initialize(key, value)
+      super(key, value)
+      @color = RED
+    end
+
+    def red?
+      @color == RED
+    end
+
+    def black?
+      @color == BLACK
+    end
+
+    def set_black!
+      @color = BLACK
+    end
+
+    def set_red!
+      @color = RED
+    end
+  end
+
+  class RedBlackTree < BasicBinarySearchTree
+
+    def []=(key, value)
+      new_node = RedBlackTreeNode.new(key, value)
+      if @root.nil?
+        new_node.set_black!
+        @root = new_node
+      else
+        node = insert(@root, new_node)
+        fix_variance node
+      end
+    end
+
+    # breadth first traversal
+    def bfs_print
+      puts '=' * 100
+      level = [@root]
+      until level.empty?
+        next_level = []
+        level.each do |node|
+          if node
+            printf "<#{node.key}, #{node.value}>"
+            printf "(#{node.parent.key}|" if node != @root
+            if node.red?
+              printf "R)\t"
+            else
+              printf "B)\t"
+            end
+            next_level.push node.left
+            next_level.push node.right
+          else
+            printf "<Nil>\t"
+            next_level.push nil
+            next_level.push nil
+          end
+        end
+        puts
+        if next_level.count(nil) < next_level.length
+          level = next_level
+        else
+          level = []
+        end
+      end
+      puts '=' * 100
+    end
+
+
+    private
+    def fix_variance(node)
+      # for root, recolor to black when necessary
+      if node == @root
+        node.set_black! if node.red?
+        return
+      end
+
+      parent = node.parent
+      return if parent.black? # we are good
+
+      # otherwise we have the double red
+      grand_parent = parent.parent
+      uncle = sibling_of parent
+
+      if uncle && uncle.red?
+        parent.set_black!
+        uncle.set_black!
+        grand_parent.set_red!
+        fix_variance grand_parent
+      else
+        restructure( node )
+      end
+
+    end
+
+    def restructure(node)
+      parent = node.parent
+      grand_parent = parent.parent
+      if left_child?(node) && left_child?(parent)
+        right_up_rotation parent
+        parent.set_black!
+        node.set_red!
+        grand_parent.set_red!
+      elsif right_child?(node) && left_child?(parent)
+        left_up_rotation node
+        right_up_rotation node
+        node.set_black!
+        parent.set_red!
+        grand_parent.set_red!
+      elsif right_child?(node) && right_child?(parent)
+        left_up_rotation parent
+        parent.set_black!
+        node.set_red!
+        grand_parent.set_red!
+      else
+        right_up_rotation node
+        left_up_rotation node
+        node.set_black!
+        parent.set_red!
+        grand_parent.set_red!
+      end
+    end
+
+
+    def re_balance
+    end
+
+    def re_color
+
+    end
+
+    def sibling_of(node)
+      parent = node.parent
+      return nil if parent.nil?
+      if left_child? node
+        parent.right
+      else
+        parent.left
+      end
+    end
+
+    def right_up_rotation(node)
+      parent = node.parent
+      grand_parent = parent.parent
+
+      node.parent = grand_parent
+      if left_child? parent
+        grand_parent.left = node
+      elsif right_child? parent
+        grand_parent.right = node
+      else
+        @root = node
+      end
+
+      parent.left = node.right
+      node.right.parent = parent if node.right
+
+      node.right = parent
+      parent.parent = node
+
+    end
+
+    def left_up_rotation(node)
+      parent = node.parent
+      grand_parent = parent.parent
+
+      node.parent = grand_parent
+      if left_child? parent
+        grand_parent.left = node
+      elsif right_child? parent
+        grand_parent.right = node
+      else
+        @root = node
+      end
+
+      parent.right = node.left
+      node.left.parent = parent if node.left
+
+      node.left = parent
+      parent.parent = node
+
     end
 
 

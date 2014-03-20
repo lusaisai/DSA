@@ -106,5 +106,35 @@ class MyTest < Test::Unit::TestCase
 
   end
 
+  def test_rb
+    rb = DSA::RedBlackTree.new
+    rb[100] = 'string_100'
+    rb[50] = 'string_50'
+    rb[1] = 'string_1'
+    rb.bfs_print
+    rb[120] = 'string_120'
+    rb.bfs_print
+    rb[150] = 'string_150'
+    rb.bfs_print
+
+    5.times do
+      key = Random.rand 200
+      value = "string_#{key}"
+      puts "inserting #{key}"
+      rb[key] = value
+      rb.bfs_print
+    end
+
+    100.times do
+      key = Random.rand 200
+      value = "string_#{key}"
+      rb[key] = value
+    end
+    rb.bfs_print
+    rb.gt(50) do |key, value|
+      printf "<#{key}-#{value}>\t"
+    end
+  end
+
 
 end
