@@ -36,22 +36,29 @@ class MyTest < Test::Unit::TestCase
   end
 
 
-  def test_insertion_sort
+  def test_sort
     original = [3,6,7,8,2,4,7,8,1,5,9,6]
     expect =   [1,2,3,4,5,6,6,7,7,8,8,9]
     DSA::Algorithm::insertion_sort!(original)
     assert_equal expect, original, 'sort failed'
 
+    original = [3,6,7,8,2,4,7,8,1,5,9,6]
+    expect =   [1,2,3,4,5,6,6,7,7,8,8,9]
+    DSA::Algorithm::quick_sort!(original, 0, original.length-1)
+    assert_equal expect, original, 'sort failed'
+
     puts
     puts 'insertion sort vs built in'
-    value = 10**5
+    value = 10**3
     sorted_a = (0..value).to_a
     sorted_b = (0..value).to_a
+    sorted_c = (0..value).to_a
 
 
     puts 'sort on already sorted'
     Benchmark.bm(20) do |x|
       x.report('insertion sort') { DSA::Algorithm::insertion_sort! sorted_a }
+      x.report('quick sort') { DSA::Algorithm::quick_sort! sorted_c, 0, sorted_c.length-1 }
       x.report('built in sort') { sorted_b.sort!  }
     end
 
@@ -60,8 +67,19 @@ class MyTest < Test::Unit::TestCase
     value = 10**4
     not_sorted_a = value.times.map { Random.rand(value) }
     not_sorted_b = value.times.map { Random.rand(value) }
+    not_sorted_c = value.times.map { Random.rand(value) }
     Benchmark.bm(20) do |x|
       x.report('insertion sort') { DSA::Algorithm::insertion_sort! not_sorted_a }
+      x.report('quick sort') { DSA::Algorithm::quick_sort! not_sorted_c, 0, not_sorted_c.length-1 }
+      x.report('built in sort') { not_sorted_b.sort!  }
+    end
+
+    puts 'sort on not sorted'
+    value = 10**6
+    not_sorted_b = value.times.map { Random.rand(value) }
+    not_sorted_c = value.times.map { Random.rand(value) }
+    Benchmark.bm(20) do |x|
+      x.report('quick sort') { DSA::Algorithm::quick_sort! not_sorted_c, 0, not_sorted_c.length-1 }
       x.report('built in sort') { not_sorted_b.sort!  }
     end
 

@@ -706,4 +706,5 @@ module DSA
   end
 
   BinarySearchTree = RedBlackTree
+  OrderedMap = RedBlackTree
 end
