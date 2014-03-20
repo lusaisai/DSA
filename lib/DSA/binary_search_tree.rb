@@ -2,17 +2,12 @@ module DSA
   # A basic binary search tree node
   class BasicBinarySearchTreeNode
     attr_accessor :key, :value, :parent, :left, :right
-    include Comparable
     def initialize(key, value)
       @key = key
       @value = value
       @parent = nil
       @left = nil
       @right = nil
-    end
-
-    def <=>(other_node)
-      key <=> other_node.key
     end
   end
   # A basic binary search tree(or ordered map), with no specific self balancing

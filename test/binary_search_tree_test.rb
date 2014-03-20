@@ -243,6 +243,10 @@ class MyTest < Test::Unit::TestCase
     rb[110] = 'string_110'
     rb[63] = 'string_63'
 
+    rb.bfs_print
+    rb.delete 87
+    rb.bfs_print
+
     200.times do
       key = Random.rand 200
       value = "string_#{key}"
