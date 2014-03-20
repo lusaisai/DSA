@@ -2,12 +2,17 @@ module DSA
   # A basic binary search tree node
   class BasicBinarySearchTreeNode
     attr_accessor :key, :value, :parent, :left, :right
+    include Comparable
     def initialize(key, value)
       @key = key
       @value = value
       @parent = nil
       @left = nil
       @right = nil
+    end
+
+    def <=>(other_node)
+      key <=> other_node.key
     end
   end
   # A basic binary search tree(or ordered map), with no specific self balancing
@@ -462,6 +467,40 @@ module DSA
       rb_delete_node(node).first.value
     end
 
+    # breadth first traversal
+    def bfs_print
+      puts '=' * 100
+      level = [@root]
+      until level.empty?
+        next_level = []
+        level.each do |node|
+          if node
+            printf "<#{node.key}, #{node.value}>"
+            printf "(#{node.parent.key}|" if node != @root
+            if node.red?
+              printf "R)\t"
+            else
+              printf "B)\t"
+            end
+            next_level.push node.left
+            next_level.push node.right
+          else
+            printf "<Nil>\t"
+            next_level.push nil
+            next_level.push nil
+          end
+        end
+        puts
+        if next_level.count(nil) < next_level.length
+          level = next_level
+        else
+          level = []
+        end
+      end
+      puts '=' * 100
+    end
+
+    private
     def rb_delete_node(node)
       node, replace_node, sibling = delete_node(node)
       value = [node, replace_node]
@@ -507,40 +546,6 @@ module DSA
       end
     end
 
-    # breadth first traversal
-    def bfs_print
-      puts '=' * 100
-      level = [@root]
-      until level.empty?
-        next_level = []
-        level.each do |node|
-          if node
-            printf "<#{node.key}, #{node.value}>"
-            printf "(#{node.parent.key}|" if node != @root
-            if node.red?
-              printf "R)\t"
-            else
-              printf "B)\t"
-            end
-            next_level.push node.left
-            next_level.push node.right
-          else
-            printf "<Nil>\t"
-            next_level.push nil
-            next_level.push nil
-          end
-        end
-        puts
-        if next_level.count(nil) < next_level.length
-          level = next_level
-        else
-          level = []
-        end
-      end
-      puts '=' * 100
-    end
-
-    private
     def has_red_child?(node)
       if node.left && node.left.red?
         node.left

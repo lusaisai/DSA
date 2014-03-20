@@ -8,10 +8,15 @@ module DSA
   # Node
   class ListNode
     attr_accessor :element, :prev, :next
+    include Comparable
     def initialize(e)
       @element = e
       @prev = nil
       @next = nil
+    end
+
+    def <=>(other_node)
+      element <=> other_node.element
     end
   end
 
