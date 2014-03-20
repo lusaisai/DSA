@@ -31,7 +31,7 @@ module DSA
       return nil if @root.nil?
       node = find_node @root, key
       return nil if node.nil?
-      delete_node node
+      delete_node(node).first.value
     end
 
     def [](key)
@@ -291,22 +291,25 @@ module DSA
         node.value = next_node.value
         delete_node next_node
       end
-      node.value
     end
 
     # replace a node with another node, this includes the links that node has
     def replace(node, new_node)
       if node == @root
         @root = new_node
+        sibling = nil
       else
         parent = node.parent
         if parent.left == node
           parent.left = new_node
+          sibling = parent.right
         else
           parent.right = new_node
+          sibling = parent.left
         end
         new_node.parent = parent unless new_node.nil?
       end
+      [node, new_node, sibling]
     end
 
 
@@ -448,7 +451,59 @@ module DSA
         @root = new_node
       else
         node = insert(@root, new_node)
-        fix_variance node
+        fix_variance node if node.red? # when it is an existing node, it could be black
+      end
+    end
+
+    def delete(key)
+      return nil if @root.nil?
+      node = find_node @root, key
+      return nil if node.nil?
+      rb_delete_node(node).first.value
+    end
+
+    def rb_delete_node(node)
+      node, replace_node, sibling = delete_node(node)
+      value = [node, replace_node]
+
+      return value if node.red? # red is always fine
+      if node.black?
+        if replace_node # if it has a child(the replace_node), it must be red
+          replace_node.set_black!
+        else # it is a black leaf, it is complicated
+          fix_deficit sibling
+        end
+      end
+
+      value
+    end
+
+    # the heavier side after a black leaf deleted
+    def fix_deficit(sibling)
+      parent = sibling.parent
+      if sibling.black?
+        x = has_red_child? sibling
+        if x
+          deletion_restructure(x)
+        else # if sibling does not have a red child
+          sibling.set_red!
+          if parent.red?
+            parent.set_black!
+          else
+            fix_deficit sibling_of(parent)
+          end
+        end
+      else # when my sibling is red
+        if left_child? sibling
+          heavy_node = sibling.right
+          right_up_rotation sibling
+        else
+          heavy_node = sibling.left
+          left_up_rotation sibling
+        end
+        sibling.set_black!
+        parent.set_red!
+        fix_deficit heavy_node
       end
     end
 
@@ -485,8 +540,17 @@ module DSA
       puts '=' * 100
     end
 
-
     private
+    def has_red_child?(node)
+      if node.left && node.left.red?
+        node.left
+      elsif node.right && node.right.red?
+        node.right
+      else
+        nil
+      end
+    end
+
     def fix_variance(node)
       # for root, recolor to black when necessary
       if node == @root
@@ -512,6 +576,52 @@ module DSA
 
     end
 
+    # rotations and re-color in different cases(zig-zig and zig-zag) for deletion
+    def deletion_restructure(node)
+      parent = node.parent
+      grand_parent = parent.parent
+      if left_child?(node) && left_child?(parent)
+        right_up_rotation parent
+        if grand_parent.red?
+          parent.set_red!
+        else
+          parent.set_black!
+        end
+        node.set_black!
+        grand_parent.set_black!
+      elsif right_child?(node) && left_child?(parent)
+        left_up_rotation node
+        right_up_rotation node
+        if grand_parent.red?
+          node.set_red!
+        else
+          node.set_black!
+        end
+        parent.set_black!
+        grand_parent.set_black!
+      elsif right_child?(node) && right_child?(parent)
+        left_up_rotation parent
+        if grand_parent.red?
+          parent.set_red!
+        else
+          parent.set_black!
+        end
+        node.set_black!
+        grand_parent.set_black!
+      else
+        right_up_rotation node
+        left_up_rotation node
+        if grand_parent.red?
+          node.set_red!
+        else
+          node.set_black!
+        end
+        parent.set_black!
+        grand_parent.set_black!
+      end
+    end
+
+    # rotations and re-color in different cases(zig-zig and zig-zag) for insertion
     def restructure(node)
       parent = node.parent
       grand_parent = parent.parent
@@ -538,14 +648,6 @@ module DSA
         parent.set_red!
         grand_parent.set_red!
       end
-    end
-
-
-    def re_balance
-    end
-
-    def re_color
-
     end
 
     def sibling_of(node)
@@ -602,4 +704,6 @@ module DSA
 
 
   end
+
+  BinarySearchTree = RedBlackTree
 end
