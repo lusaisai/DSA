@@ -47,32 +47,41 @@ class MyTest < Test::Unit::TestCase
     DSA::Algorithm::quick_sort!(original, 0, original.length-1)
     assert_equal expect, original, 'sort failed'
 
-    puts
-    puts 'insertion sort vs built in'
-    value = 10**3
-    sorted_a = (0..value).to_a
-    sorted_b = (0..value).to_a
-    sorted_c = (0..value).to_a
+  end
+
+  def test_sort_performance
+
 
 
     puts 'sort on already sorted'
+    puts
+    value = 10**5
+    sorted_a = (0..value).to_a
+    sorted_b = sorted_a.map {|e| e}
+    sorted_c = sorted_a.map {|e| e}
+    assert_equal sorted_a, sorted_b, ''
+    assert_equal sorted_a, sorted_c, ''
     Benchmark.bm(20) do |x|
       x.report('insertion sort') { DSA::Algorithm::insertion_sort! sorted_a }
       x.report('quick sort') { DSA::Algorithm::quick_sort! sorted_c, 0, sorted_c.length-1 }
       x.report('built in sort') { sorted_b.sort!  }
     end
+    assert_equal sorted_a, sorted_b, ''
+    assert_equal sorted_a, sorted_c, ''
 
 
     puts 'sort on not sorted'
     value = 10**4
     not_sorted_a = value.times.map { Random.rand(value) }
-    not_sorted_b = value.times.map { Random.rand(value) }
-    not_sorted_c = value.times.map { Random.rand(value) }
+    not_sorted_b = not_sorted_a.map { |e| e }
+    not_sorted_c = not_sorted_a.map { |e| e }
     Benchmark.bm(20) do |x|
       x.report('insertion sort') { DSA::Algorithm::insertion_sort! not_sorted_a }
       x.report('quick sort') { DSA::Algorithm::quick_sort! not_sorted_c, 0, not_sorted_c.length-1 }
       x.report('built in sort') { not_sorted_b.sort!  }
     end
+    assert_equal not_sorted_a, not_sorted_b, ''
+    assert_equal not_sorted_a, not_sorted_c, ''
 
     puts 'sort on not sorted'
     value = 10**6

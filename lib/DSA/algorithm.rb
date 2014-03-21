@@ -44,9 +44,9 @@ module DSA
     # in place quick sort
     def self.quick_sort!(data, low, high)
       return if low >= high
-      pivot = data[high]
+      pivot = data[Random.rand(low..high)]
       left = low
-      right = high - 1
+      right = high
       while left <= right
         until left > right || data[left] >= pivot
           left += 1
@@ -60,9 +60,8 @@ module DSA
           right -= 1
         end
       end
-      data[left], data[high] = data[high], data[left]
-      quick_sort!(data, low, left - 1)
-      quick_sort!(data, left+1, high)
+      quick_sort!(data, low, right)
+      quick_sort!(data, left, high)
     end
 
   end
