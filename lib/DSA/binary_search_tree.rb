@@ -3,6 +3,7 @@ module DSA
   class BasicBinarySearchTreeNode
     attr_accessor :key, :value, :parent, :left, :right
     def initialize(key, value)
+      raise KeyError, 'Key cannot be nil' if key.nil?
       @key = key
       @value = value
       @parent = nil
