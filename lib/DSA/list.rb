@@ -1,6 +1,6 @@
 module DSA
   # Exception
-  class ListInsertError < StandardError
+  class ListIndexError < StandardError
   end
   class ListRemovalError < StandardError
   end
@@ -156,7 +156,7 @@ module DSA
     private
     def get_node(index)
       index += @length if index < 0
-      raise(ListInsertError, 'Index out of bound: ' + index.to_s) if index > @length - 1 || index < 0
+      raise(ListIndexError, 'Index out of bound: ' + index.to_s) if index > @length - 1 || index < 0
       if index > @length / 2
         node = @tail.prev
         current_index = @length - 1
