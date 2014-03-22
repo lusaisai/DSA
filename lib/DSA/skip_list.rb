@@ -28,6 +28,7 @@ module DSA
 
   class SkipList
     attr_reader :length, :height
+    include Enumerable
     def initialize
       @levels = [SkipListLevel.new]
       @length = 0
@@ -38,6 +39,7 @@ module DSA
       nodes = find_nodes key
 
       if block_given?
+        return unless nodes
         nodes.each do |node|
           yield [node.key, node.value]
         end
@@ -51,16 +53,122 @@ module DSA
 
     end
 
+    def each
+      walk = @levels.first.head
+      if block_given?
+        walk = walk.next
+        until walk.is_sentinel?
+          yield [ walk.key, walk.value ]
+          walk = walk.next
+        end
+      else
+        Enumerator.new do |y|
+          each do |key, value|
+            y << [key, value]
+          end
+        end
+      end
+    end
+
+    def gt(key)
+      nodes = find_nodes(key, true, false)
+
+      if block_given?
+        return unless nodes
+        walk = nodes.last.next
+        until walk.is_sentinel?
+          yield [ walk.key, walk.value ]
+          walk = walk.next
+        end
+      else
+        Enumerator.new do |y|
+          gt(key) do |key, value|
+            y << [key, value]
+          end
+        end
+      end
+    end
+
+    def ge(key)
+      nodes = find_nodes(key, true, false)
+
+      if block_given?
+        return unless nodes
+        if nodes.first.key == key
+          walk = nodes.first
+        else
+          walk = nodes.first.next
+        end
+        until walk.is_sentinel?
+          yield [ walk.key, walk.value ]
+          walk = walk.next
+        end
+      else
+        Enumerator.new do |y|
+          ge(key) do |key, value|
+            y << [key, value]
+          end
+        end
+      end
+    end
+
+    def lt(key)
+      nodes = find_nodes(key, false, true)
+
+      if block_given?
+        return unless nodes
+        walk = nodes.first.prev
+        until walk.is_sentinel?
+          yield [ walk.key, walk.value ]
+          walk = walk.prev
+        end
+      else
+        Enumerator.new do |y|
+          lt(key) do |key, value|
+            y << [key, value]
+          end
+        end
+      end
+    end
+
+    def le(key)
+      nodes = find_nodes(key, false, true)
+
+      if block_given?
+        return unless nodes
+        if nodes.first.key == key
+          walk = nodes.last
+        else
+          walk = nodes.last.prev
+        end
+        until walk.is_sentinel?
+          yield [ walk.key, walk.value ]
+          walk = walk.prev
+        end
+      else
+        Enumerator.new do |y|
+          le(key) do |key, value|
+            y << [key, value]
+          end
+        end
+      end
+    end
+
 
     # if value provided, the nodes have the same key/value pairs will be deleted,
     # otherwise, all nodes have the same key are deleted
     # return the value of last deleted node
     def delete(key, value = nil)
       nodes = find_nodes(key)
-      return_value = false
+      return false unless nodes
 
+      return_value = false
       nodes.each do |node|
-        return_value = remove_tower node if !value || value == node.value
+        if !value || value == node.value
+          return_value = remove_tower node
+          @length -= 1
+          remove_empty_level
+        end
       end
 
       return_value
@@ -88,7 +196,7 @@ module DSA
       end
     end
 
-    def print_me(width = 5)
+    def print_me(width = 10)
       rec = Hash.new
       walk = @levels.first.head
       i = 0
@@ -124,7 +232,17 @@ module DSA
     end
 
     private
-    def find_nodes(key)
+    def remove_empty_level
+      return if @length < 2
+      one_to_last = @levels[-2]
+      if one_to_last.head.next.is_sentinel?
+        @levels.pop
+        @height -= 1
+      end
+    end
+
+    # if not found, two more options are provided
+    def find_nodes(key, return_previous = false, return_next = false )
       walk = start_node
       while 1
         if !walk.is_sentinel? && key == walk.key
@@ -134,7 +252,13 @@ module DSA
             walk = walk.down
             next
           else
-            return nil
+            if return_previous
+              return [walk]
+            elsif return_next
+              return [walk.next]
+            else
+              return nil
+            end
           end
         else
           walk = walk.next
@@ -158,7 +282,7 @@ module DSA
 
       other_node = walk.prev
       while !other_node.is_sentinel? && other_node.key == key
-        nodes.push other_node
+        nodes.unshift other_node
         other_node = other_node.prev
       end
 

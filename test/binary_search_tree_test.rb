@@ -270,6 +270,7 @@ class MyTest < Test::Unit::TestCase
   def test_performance
     puts
     rb = DSA::RedBlackTree.new
+    sl = DSA::SkipList.new
     hash = Hash.new
     value = 10**5
     Benchmark.bm(20) do |x|
@@ -277,6 +278,10 @@ class MyTest < Test::Unit::TestCase
       x.report('RedBlack Find') { value.times { rb[Random.rand(value)] } }
       x.report('RedBlack Find gt') { value.times { rb.gt(Random.rand(value)) } }
       x.report('RedBlack Deletion') { (value/2).times { rb.delete Random.rand(value) } }
+      x.report('SkipList') { value.times { sl.add Random.rand(value), 'whatever' } }
+      x.report('SkipList Find') { value.times { sl.find Random.rand(value) } }
+      x.report('SkipList Find gt') { value.times { sl.gt Random.rand(value) } }
+      x.report('SkipList Deletion') { (value/2).times { sl.delete Random.rand(value) } }
       x.report('Built-In Hash') { value.times { hash[Random.rand(value)] = 'whatever' } }
       x.report('Built-In Hash Find') { value.times { hash[Random.rand(value)] } }
       x.report('Built-In Hash Deletion') { (value/2).times { hash.delete Random.rand(value) } }
