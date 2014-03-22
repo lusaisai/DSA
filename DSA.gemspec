@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["lusaisai"]
   spec.email         = ["lusaisai@163.com"]
   spec.summary       = %q{Data Structures and Algorithms in Ruby}
-  spec.description   = %q{List, BinarySearchTree(RedBlackTree), PriorityQueue, (Array/List)Stack and Queue}
+  spec.description   = %q{List, BinarySearchTree(RedBlackTree), SkipList, PriorityQueue, (Array/List)Stack and Queue}
   spec.homepage      = "https://github.com/lusaisai/DSA"
   spec.license       = "MIT"
 

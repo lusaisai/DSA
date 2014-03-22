@@ -136,7 +136,8 @@ Implemented based on array or list.
     s.empty?
     s.top
     s.length
-
+```
+```ruby
     q = DSA::ArrayQueue.new
     q = DSA::ListQueue.new
     q.enqueue 'some value'
