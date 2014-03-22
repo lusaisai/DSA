@@ -87,6 +87,34 @@ A help method tried to print a tree, not quite pretty, but may helps test
 Enumerable is included, all those method such as 'each' are all available, since other methods are based on each,
 the performance might not be the best, use only when a full traversal is inevitable.
 
+### SkipList
+An ordered map, storing key/value pairs, duplicate keys are allowed, value can be omitted, preserves an order and provides range search, implemented as a skip list.
+
+```ruby
+    sl = DSA::SkipList.new
+    sl.add key, value
+    sl.add key # value will be nil
+    sl.delete key # all those pairs with the key will be deleted
+    sl.delete key, value # the pair has same key/value pair will be deleted
+```
+
+And special methods related to orders, those methods yield key/value pairs to block, if no block, enumerator is returned.
+```ruby
+    sl.find key
+    sl.each # in-order traversal
+    sl.gt(key) # key/value pairs for keys greater than key
+    sl.ge(key)
+    sl.lt(key)
+    sl.le(key)
+```
+A help method prints the skip list
+```ruby
+    sl.print_me
+    sl.print_me width # width, the length of evert key/value pair, default to 10
+```
+Enumerable is included, all those method such as 'each' are all available, since other methods are based on each,
+the performance might not be the best, use only when a full traversal is inevitable.
+
 
 ### PriorityQueue
 An array based heap, priority is a number, the smaller it is, higher priority it has
