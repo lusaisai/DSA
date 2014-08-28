@@ -20,7 +20,18 @@ class MyTest < Test::Unit::TestCase
   def test_function
     assert_equal 120, DSA::Algorithm::factorial(5), 'factorial function is wrong'
     assert DSA::Algorithm::binary_search((1..9).to_a, 2, 0, 8), 'binary search failed'
+    assert_equal 55, DSA::Algorithm::fibonacci(10), 'fibonacci failed'
   end
+
+  def test_fibonacci
+    assert_equal 55, DSA::Algorithm::fibonacci(10), 'fibonacci failed'
+    assert_equal 55, DSA::Algorithm::fibonacci_bad(10), 'fibonacci_bad failed'
+    Benchmark.bm(20) do |x|
+      x.report('fibonacci iterate') { DSA::Algorithm::fibonacci(500000) }
+      x.report('fibonacci recursion') { DSA::Algorithm::fibonacci_bad(500000) }
+    end
+  end
+
 
   def test_performance
     puts

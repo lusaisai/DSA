@@ -10,6 +10,42 @@ module DSA
       end
     end
 
+    # fibonacci numbers
+    def self.fibonacci(n)
+      if !n.is_a? Integer or n < 0
+        raise ArgumentError
+      end
+
+      if n == 0
+        0
+      elsif n == 1
+        1
+      elsif n >= 2
+        a = 0
+        b = 1
+        2.upto(n) {
+          b, a = a + b, b
+        }
+        b
+      end
+    end
+
+    # we could implement fibonacci using recursion which looks simple, unfortunately, the running time of this algorithm
+    # itself is a fibonacci sequence, which grows fast, kind of exponential
+    def self.fibonacci_bad(n)
+      if !n.is_a? Integer or n < 0
+        raise ArgumentError
+      end
+
+      if n == 0
+        0
+      elsif n == 1
+        1
+      elsif n >= 2
+        fibonacci(n-1) + fibonacci(n-2)
+      end
+    end
+
 
     # Binary search in sorted array
     def self.binary_search(data, target, low, high)
