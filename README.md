@@ -151,6 +151,8 @@ The following functions are for demonstrations, specially sort, using built-in A
 they have a better performance.
 ```ruby
     DSA::Algorithm::factorial(5)
+    DSA::Algorithm::fibonacci(10)
+    DSA::Algorithm::fibonacci_bad(10) # implemented via recursion, bad performance when n grows
     DSA::Algorithm::binary_search((1..9).to_a, 2, 0, 8)
     DSA::Algorithm::insertion_sort!(array)
     DSA::Algorithm::quick_sort!(array, 0, array.length-1)
