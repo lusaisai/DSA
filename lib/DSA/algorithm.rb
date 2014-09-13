@@ -100,5 +100,28 @@ module DSA
       quick_sort!(data, left, high)
     end
 
+    # radix sort, in base 10
+    def self.radix_sort(data)
+      goto_next_digit = true
+      position = 0
+      while goto_next_digit
+        goto_next_digit = false
+        buckets = []
+        10.times { buckets << [] }
+        data.each do |number|
+          digit = get_digit(number, position)
+          goto_next_digit = true if digit > 0 # if all digits are zero, loop will end
+          buckets[digit] << number
+        end
+        data = buckets.flatten!
+        position += 1
+      end
+      data
+    end
+
+    def self.get_digit(number, position)
+      number % (10 ** (position+1)) / (10 ** position)
+    end
+
   end
 end
