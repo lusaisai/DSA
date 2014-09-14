@@ -119,6 +119,17 @@ module DSA
       data
     end
 
+    def self.sqrt(n)
+      err = 1e-10
+      r = Float(n)
+      while (r - n/r).abs >= err
+        r = ( r + n/r ) / 2
+      end
+      r
+    end
+
+
+    private
     def self.get_digit(number, position)
       number % (10 ** (position+1)) / (10 ** position)
     end

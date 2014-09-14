@@ -156,4 +156,6 @@ they have a better performance.
     DSA::Algorithm::binary_search((1..9).to_a, 2, 0, 8)
     DSA::Algorithm::insertion_sort!(array)
     DSA::Algorithm::quick_sort!(array, 0, array.length-1)
+    DSA::Algorithm::radix_sort(array) # array should be integers
+    DSA::Algorithm::sqrt(number)
 ```

@@ -17,6 +17,12 @@ class MyTest < Test::Unit::TestCase
     # Do nothing
   end
 
+  def test_sqrt
+    puts 'square root of 2 is ', DSA::Algorithm::sqrt(2)
+    puts 'square root of 25 is ', DSA::Algorithm::sqrt(25)
+    puts 'square root of 123456.789 is ', DSA::Algorithm::sqrt(123456.789)
+  end
+
   def test_radix_sort
     assert_equal( 2, DSA::Algorithm::get_digit(123, 1), 'get digit failed' )
     assert_equal( 0, DSA::Algorithm::get_digit(123, 5), 'get digit failed' )
