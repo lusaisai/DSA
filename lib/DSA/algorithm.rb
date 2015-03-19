@@ -10,8 +10,30 @@ module DSA
       end
     end
 
-    # fibonacci numbers
+
     def self.fibonacci(n)
+      self.fibonacci_logarithm(n)
+    end
+
+    # we could implement fibonacci using recursion which looks simple, unfortunately, the running time of this algorithm
+    # itself is a fibonacci sequence, which grows fast, kind of exponential
+    def self.fibonacci_exponential(n)
+      if !n.is_a? Integer or n < 0
+        raise ArgumentError
+      end
+
+      if n == 0
+        0
+      elsif n == 1
+        1
+      elsif n >= 2
+        fibonacci_exponential(n-1) + fibonacci_exponential(n-2)
+      end
+    end
+
+
+    # fibonacci numbers
+    def self.fibonacci_linear(n)
       if !n.is_a? Integer or n < 0
         raise ArgumentError
       end
@@ -30,9 +52,10 @@ module DSA
       end
     end
 
-    # we could implement fibonacci using recursion which looks simple, unfortunately, the running time of this algorithm
-    # itself is a fibonacci sequence, which grows fast, kind of exponential
-    def self.fibonacci_bad(n)
+    # fibonacci sequences can be calculated in matrix multiplying
+    # [[f(n+1), f(n)], [f(n), f(n-1)]] equals [[1,1], [1,0]] to the nth
+    # matrix multiplying can be achieved in logarithm time if we use divide and conquer
+    def self.fibonacci_logarithm(n)
       if !n.is_a? Integer or n < 0
         raise ArgumentError
       end
@@ -42,8 +65,45 @@ module DSA
       elsif n == 1
         1
       elsif n >= 2
-        fibonacci(n-1) + fibonacci(n-2)
+        result = self.fibonacci_matrix_nth(n)
+        result[0][1]
       end
+    end
+
+    def self.fibonacci_matrix_nth(n)
+      first = [[1,1], [1,0]]
+      if n == 1
+        first
+      elsif n % 2 == 0
+        half = self.fibonacci_matrix_nth(n/2)
+        square_matrix_multiply(half, half)
+      else
+        square_matrix_multiply(first, self.fibonacci_matrix_nth(n-1))
+      end
+    end
+
+    def self.square_matrix_multiply(a, b, size=2)
+      result = []
+      n = size - 1
+      0.upto(n) do |i|
+        result[i] = []
+        0.upto(n) do |j|
+          result[i][j] = 0
+          0.upto(n) do |k|
+            result[i][j] += a[i][k] * b[k][j]
+          end
+        end
+      end
+      result
+    end
+
+
+    # It is kind of cheating, but mathematicians are unbelievable,
+    # they figured out a function to calculate the fibonacci sequence directly.
+    # There's limitation on the 64-bit float numbers, so only use it to calculate small numbers.
+    def self.fibonacci_constant(n)
+      phi = 1.618034
+      ((phi ** n - (1-phi) ** n) / Math.sqrt(5)).round
     end
 
 

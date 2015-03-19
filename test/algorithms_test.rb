@@ -38,11 +38,16 @@ class MyTest < Test::Unit::TestCase
   end
 
   def test_fibonacci
-    assert_equal 55, DSA::Algorithm::fibonacci(10), 'fibonacci failed'
-    assert_equal 55, DSA::Algorithm::fibonacci_bad(10), 'fibonacci_bad failed'
+    assert_equal 55, DSA::Algorithm::fibonacci_exponential(10), 'fibonacci_exponential failed'
+    assert_equal 55, DSA::Algorithm::fibonacci_linear(10), 'fibonacci_linear failed'
+    assert_equal 55, DSA::Algorithm::fibonacci_logarithm(10), 'fibonacci_logarithm failed'
+    assert_equal 55, DSA::Algorithm::fibonacci_constant(10), 'fibonacci_constant failed'
     Benchmark.bm(20) do |x|
-      x.report('fibonacci iterate') { DSA::Algorithm::fibonacci(500000) }
-      x.report('fibonacci recursion') { DSA::Algorithm::fibonacci_bad(500000) }
+      # x.report('fibonacci exponential') { DSA::Algorithm::fibonacci_exponential(35) }
+      x.report('fibonacci linear') { DSA::Algorithm::fibonacci_linear(99999) }
+      x.report('fibonacci logarithm') { DSA::Algorithm::fibonacci_logarithm(99999) }
+      x.report('fibonacci constant') { DSA::Algorithm::fibonacci_constant(1000) }
+      # x.report('fibonacci constant') { DSA::Algorithm::fibonacci_constant(100000) }
     end
   end
 

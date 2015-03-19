@@ -5,28 +5,28 @@ Ruby gem for basic Data Structures and Algorithms
 ## Installation
 
 Add this line to your application's Gemfile:
-```bash
+```
     gem 'DSA'
 ```
 And then execute:
-```bash
+```
     $ bundle
 ```
 Or install it yourself as:
-```bash
+```
     $ gem install DSA
 ```
 ## Usage
 
 To include the package,
-```ruby
+```
     require 'DSA'
 ```
 
 ### List
 A doubly linked list data structure. Use when there are lots of insertions/deletions in the middle,
 otherwise, built-in array is better.
-```ruby
+```
     l = DSA::List.new
     l.push 'some value'
     l.pop
@@ -38,13 +38,13 @@ otherwise, built-in array is better.
     l.length
 ```
 General access/removal/insertion using index is supported, these operations require linear time, so use carefully.
-```ruby
+```
     l[2]
     l.insert_at 10, 'some value'
     l.remove_at 2
 ```
 To do lots of insertions/deletions, use the iterator, StopIteration is raised when reaching to head or tail
-```ruby
+```
     li = l.begin_iterator # the iterator starts from the head
     puts li.next
     li.insert 'some value'
@@ -61,19 +61,19 @@ the performance might not be the best, use only when a full traversal is inevita
 An ordered map, works like a hash, but preserves an order and provides range search, implemented as a RedBlack tree.
 
 The following three are aliases in creating a new object,
-```ruby
+```
     rb = DSA::BinarySearchTree.new
     rb = DSA::OrderedMap.new
     rb = DSA::RedBlackTree.new
 ```
 Method are very like a hash,
-```ruby
+```
     rb[key] = value
     rb[key]
     rb.delete key
 ```
 And special methods related to orders, those methods yield key/value pairs to block, if no block, enumerator is returned.
-```ruby
+```
     rb.each # in-order traversal
     rb.gt(key) # key/value pairs for keys greater than key
     rb.ge(key)
@@ -81,7 +81,7 @@ And special methods related to orders, those methods yield key/value pairs to bl
     rb.le(key)
 ```
 A help method tried to print a tree, not quite pretty, but may helps test
-```ruby
+```
     rb.bfs_print
 ```
 Enumerable is included, all those method such as 'each' are all available, since other methods are based on each,
@@ -90,7 +90,7 @@ the performance might not be the best, use only when a full traversal is inevita
 ### SkipList
 An ordered map, storing key/value pairs, duplicate keys are allowed, value can be omitted, preserves an order and provides range search, implemented as a skip list.
 
-```ruby
+```
     sl = DSA::SkipList.new
     sl.add key, value
     sl.add key # value will be nil
@@ -99,7 +99,7 @@ An ordered map, storing key/value pairs, duplicate keys are allowed, value can b
 ```
 
 And special methods related to orders, those methods yield key/value pairs to block, if no block, enumerator is returned.
-```ruby
+```
     sl.find key
     sl.each # in-order traversal
     sl.gt(key) # key/value pairs for keys greater than key
@@ -108,7 +108,7 @@ And special methods related to orders, those methods yield key/value pairs to bl
     sl.le(key)
 ```
 A help method prints the skip list
-```ruby
+```
     sl.print_me
     sl.print_me width # width, the length of evert key/value pair, default to 10
 ```
@@ -118,7 +118,7 @@ the performance might not be the best, use only when a full traversal is inevita
 
 ### PriorityQueue
 An array based heap, priority is a number, the smaller it is, higher priority it has
-```ruby
+```
     pq = DSA::PriorityQueue.new
     pq.add 10, 'some job'
     pq.length
@@ -128,7 +128,7 @@ An array based heap, priority is a number, the smaller it is, higher priority it
 
 ### Stack and Queue
 Implemented based on array or list.
-```ruby
+```
     s = DSA::ArrayStack.new
     s = DSA::ListStack.new
     s.push 'some value'
@@ -137,7 +137,7 @@ Implemented based on array or list.
     s.top
     s.length
 ```
-```ruby
+```
     q = DSA::ArrayQueue.new
     q = DSA::ListQueue.new
     q.enqueue 'some value'
@@ -149,10 +149,14 @@ Implemented based on array or list.
 ### Algorithm
 The following functions are for demonstrations, specially sort, using built-in Array#bsearch and Array#sort instead,
 they have a better performance.
-```ruby
+```
     DSA::Algorithm::factorial(5)
-    DSA::Algorithm::fibonacci(10)
-    DSA::Algorithm::fibonacci_bad(10) # implemented via recursion, bad performance when n grows
+    DSA::Algorithm::fibonacci(10) # There are different implementations with different performance, defaults to fibonacci_logarithm(10)
+    DSA::Algorithm::fibonacci_exponential(10)
+    DSA::Algorithm::fibonacci_linear(10)
+    DSA::Algorithm::fibonacci_logarithm(10)
+    DSA::Algorithm::fibonacci_constant(10)
+    DSA::Algorithm::fibonacci_bad(10)
     DSA::Algorithm::binary_search((1..9).to_a, 2, 0, 8)
     DSA::Algorithm::insertion_sort!(array)
     DSA::Algorithm::quick_sort!(array, 0, array.length-1)
